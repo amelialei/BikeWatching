@@ -123,30 +123,6 @@ const timeSlider = document.getElementById('time-slider');
 const selectedTime = document.getElementById('selected-time');
 const anyTimeLabel = document.getElementById('any-time');
 
-function formatTime(minutes) {
-    const date = new Date(0, 0, 0, 0, minutes);  // Set hours & minutes
-    return date.toLocaleString('en-US', { timeStyle: 'short' }); // Format as HH:MM AM/PM
-}
-
-function updateTimeDisplay() {
-    timeFilter = Number(timeSlider.value);  // Get slider value
-  
-    if (timeFilter === -1) {
-      selectedTime.textContent = '';  // Clear time display
-      anyTimeLabel.style.display = 'block';  // Show "(any time)"
-    } else {
-      selectedTime.textContent = formatTime(timeFilter);  // Display formatted time
-      anyTimeLabel.style.display = 'none';  // Hide "(any time)"
-    }
-  
-    // Trigger the filtering logic
-    filterTripsbyTime();
-
-}
-
-timeSlider.addEventListener('input', updateTimeDisplay);
-updateTimeDisplay();
-
 let filteredTrips = [];
 let filteredArrivals = new Map();
 let filteredDepartures = new Map();
@@ -154,6 +130,11 @@ let filteredStations = [];
 
 function minutesSinceMidnight(date) {
     return date.getHours() * 60 + date.getMinutes();
+}
+
+function formatTime(minutes) {
+    const date = new Date(0, 0, 0, 0, minutes);  // Set hours & minutes
+    return date.toLocaleString('en-US', { timeStyle: 'short' }); // Format as HH:MM AM/PM
 }
 
 function filterTripsbyTime() {
@@ -188,26 +169,24 @@ function filterTripsbyTime() {
             station.totalTraffic = station.arrivals + station.departures;
             return station;
         });
+}
 
-        const radiusScale = d3
-            .scaleSqrt()
-            .domain([0, d3.max(filteredStations, (d) => d.totalTraffic)])
-            .range(timeFilter === -1 ? [0, 25] : [3, 50]);
 
-        circles
-        .data(filteredStations)
-        .attr('r', (d) => radiusScale(d.totalTraffic))
-        .select(function() { return this; })  // Select the current element
-        .each(function(d) {
-            let title = d3.select(this).select('title');
-            if (title.empty()) {
-                d3.select(this).append('title');
-            }
-            d3.select(this).select('title')
-                .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
-        });
+function updateTimeDisplay() {
+    timeFilter = Number(timeSlider.value);  // Get slider value
+  
+    if (timeFilter === -1) {
+      selectedTime.textContent = '';  // Clear time display
+      anyTimeLabel.style.display = 'block';  // Show "(any time)"
+    } else {
+      selectedTime.textContent = formatTime(timeFilter);  // Display formatted time
+      anyTimeLabel.style.display = 'none';  // Hide "(any time)"
+    }
+  
+    filterTripsbyTime();
 
 }
+
 
 
 
