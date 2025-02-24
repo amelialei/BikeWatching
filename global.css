@@ -15,21 +15,15 @@ body {
     height: 100%;
     width: 100%;
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
+    justify-content: center; 
+    align-items: center;     
   }
      
   #map {
-    width: 100%;    /* Adjust width to your desired size */
-    height: 100%;   /* Adjust height to your desired size */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for effect */
-    border-radius: 8px; /* Optional: rounded corners */
-  }
-
-  paint: {
-    'line-color': '#32D400',  // A bright green using hex code
-    'line-width': 5,          // Thicker lines
-    'line-opacity': 0.6       // Slightly less transparent
+    width: 100%;   
+    height: 100%;   
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border-radius: 8px; 
   }
 
   #map svg {
@@ -42,34 +36,82 @@ body {
 
   header {
     display: flex;
-    align-items: baseline;
-    gap: 1em;
-    padding: 1em;
-    border-bottom: 2px solid #ccc;
-    width: 100%;
-    margin-left: auto;
-  }
-/*   
-  label {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5em;
-  }
-  
-  div {
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+label {
     display: flex;
     flex-direction: column;
-  } */
-  
-  #selected-time {
-    display: block;
-  }
+    align-items: flex-end;
+}
+
+#time-slider {
+    width: 250%;
+}
+
+#time-display {
+    text-align: right;
+    width: 100%;
+}
+
+.header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 62%;
+}
   
   #any-time {
     display: block;
     font-style: italic;
     color: #888;
   }
+
+:root {
+  --color-departures: steelblue;
+  --color-arrivals: darkorange;
+}
+
+circle, .legend > div::before {
+  --color: color-mix(
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio)),
+    var(--color-arrivals)
+  );
+  fill: var(--color);
+}
+
+.legend {
+  display: flex;
+  gap: 1em; 
+  margin-block: 1em; 
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.legend > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5em; 
+  font-weight: bold;
+}
+
+.legend > div::before {
+  content: "";
+  width: 15px; 
+  height: 15px;
+  border-radius: 50%; 
+  background: var(--color); 
+  display: inline-block;
+}
+
+.legend > span {
+  color: #888; 
+}
 
 
 
