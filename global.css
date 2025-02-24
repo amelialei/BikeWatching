@@ -71,6 +71,9 @@ label {
     color: #888;
   }
 
+circle {
+  pointer-events: auto;
+}
 :root {
   --color-departures: steelblue;
   --color-arrivals: darkorange;

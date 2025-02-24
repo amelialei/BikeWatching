@@ -77,6 +77,12 @@ map.on('load', async () => {
 
 
         const stations = computeStationTraffic(jsonData.data.stations, trips);
+
+        const radiusScale = d3
+        .scaleSqrt()
+        .domain([0, d3.max(stations, (d) => d.totalTraffic)])
+        .range([0, 25]);
+
         console.log('Stations Array:', stations); 
         circles = svg.selectAll('circle')
             .data(stations, (d) => d.short_name) 
@@ -88,22 +94,14 @@ map.on('load', async () => {
             .attr('fill-opacity', 0.6) 
             .attr('stroke-width', 1)
             .attr('opacity', 0.8)
-            .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic));
+            .attr('r', (d) => radiusScale(d.totalTraffic))
+            .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic))
+            .each(function(d) {
+                d3.select(this)
+                  .append('title')
+                  .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
+                });
         
-        const radiusScale = d3
-            .scaleSqrt()
-            .domain([0, d3.max(stations, (d) => d.totalTraffic)])
-            .range([0, 25]);
-
-
-        circles
-        .data(stations)
-        .attr('r', (d) => radiusScale(d.totalTraffic))
-        .each(function(d) {
-            d3.select(this)
-              .append('title')
-              .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
-            });
     
         updatePositions();
             
